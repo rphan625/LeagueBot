@@ -116,5 +116,3 @@ for (let i = 0; i < ff_db.length; i++) {
 
 // const randomNum = Math.floor(Math.random() * 100) + 1;
 // console.log(ff_db[randomNum]);
-
-

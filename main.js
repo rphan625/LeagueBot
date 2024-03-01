@@ -145,7 +145,7 @@ client.on("interactionCreate", (interaction) => {
     const player2 = interaction.options.getString("second-player");
     const winner = interaction.options.getNumber("winner");
     interaction.reply(
-      `Game: ${game}\nFirst Player: ${player1}\nSecond Player: ${player2}\nWinner: ${winner}`,
+      `Game: ${game}\nFirst Player: ${player1}\nSecond Player: ${player2}\nWinner: ${winner}!`,
     );
   }
 });

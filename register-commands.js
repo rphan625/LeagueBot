@@ -80,7 +80,7 @@ const commands = [
         type: ApplicationCommandOptionType.Number,
         choices: [
           { name: "Player 1", value: 1 },
-          { name: "Player 2", value: 2 }
+          { name: "Player 2", value: 2 },
         ],
         required: true,
       },
