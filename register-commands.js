@@ -1,4 +1,4 @@
-const { REST, Routes } = require("discord.js");
+const { REST, Routes, ApplicationCommandOptionType } = require("discord.js");
 //Info needed for slash commands
 const botID = process.env["BOT_ID"];
 const serverID = process.env["TEST_SERVER_ID"];
@@ -12,7 +12,80 @@ const commands = [
   {
     name: "ff",
     description: "Replies with random LOL fun facts!",
-  }
+  },
+  {
+    name: "match",
+    description: "Add a 1v1 match to the database!",
+    options: [
+      {
+        name: "game",
+        description: "The game that 1v1 took place",
+        type: ApplicationCommandOptionType.String,
+        choices: [
+          { name: "League of Legends", value: "League of Legends" },
+          { name: "Roblox", value: "Roblox" },
+          { name: "Overwatch", value: "Overwatch" },
+        ],
+        required: true,
+      },
+      {
+        name: "first-player",
+        description: "The First Player",
+        type: ApplicationCommandOptionType.String,
+        choices: [
+          { name: "Blade", value: "Blade" },
+          { name: "Blub", value: "Blub" },
+          { name: "Timpany", value: "Timpany" },
+          { name: "Scope", value: "scope" },
+          { name: "Slush", value: "slush" },
+          { name: "Lily", value: "lily" },
+          { name: "Gemini", value: "gemini" },
+          { name: "Lyfe", value: "lyfe" },
+          { name: "Lindsey", value: "lindsey" },
+          { name: "Sqeezey", value: "sqeezey" },
+          { name: "Timness", value: "timness" },
+          { name: "ToKKy", value: "tokky" },
+          { name: "Zero", value: "zero" },
+          { name: "neoma", value: "neoma" },
+          { name: "Maii", value: "maii" },
+        ],
+        required: true,
+      },
+      {
+        name: "second-player",
+        description: "The Second Player",
+        type: ApplicationCommandOptionType.String,
+        choices: [
+          { name: "Blade", value: "Blade" },
+          { name: "Blub", value: "Blub" },
+          { name: "Timpany", value: "Timpany" },
+          { name: "Scope", value: "Scope" },
+          { name: "Slush", value: "Slush" },
+          { name: "Lily", value: "Lily" },
+          { name: "Gemini", value: "Gemini" },
+          { name: "Lyfe", value: "Lyfe" },
+          { name: "Lindsey", value: "Lindsey" },
+          { name: "Sqeezey", value: "Sqeezey" },
+          { name: "Timness", value: "Timness" },
+          { name: "ToKKy", value: "Tokky" },
+          { name: "Zero", value: "Zero" },
+          { name: "Neoma", value: "Neoma" },
+          { name: "Maii", value: "Maii" },
+        ],
+        required: true,
+      },
+      {
+        name: "winner",
+        description: "The Winner of the 1v1",
+        type: ApplicationCommandOptionType.Number,
+        choices: [
+          { name: "Player 1", value: 1 },
+          { name: "Player 2", value: 2 }
+        ],
+        required: true,
+      },
+    ],
+  },
 ];
 
 const rest = new REST({ version: "10" }).setToken(process.env["DISCORD_TOKEN"]);
@@ -21,7 +94,7 @@ const rest = new REST({ version: "10" }).setToken(process.env["DISCORD_TOKEN"]);
 (async () => {
   try {
     console.log("Registering slash commands...");
-    
+
     await rest.put(Routes.applicationGuildCommands(botID, serverID), {
       body: commands,
     });

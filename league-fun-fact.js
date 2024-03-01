@@ -1,6 +1,6 @@
 const Database = require("@replit/database");
 
-export const funFactString = `1. Did you know that Vayne is the godfather of Katarina and Talon?
+const funFactString = `1. Did you know that Vayne is the godfather of Katarina and Talon?
 2. Did you know that Varus was an ancient bowman who fought for independence from Noxus?
 3. Did you know that Zyra was once a proud member of the Solari, until she was betrayed by them?
 4. Did you know that Sona is the result of an experiment by the Zaunite mad scientist Viktor?
@@ -99,17 +99,22 @@ export const funFactString = `1. Did you know that Vayne is the godfather of Kat
 97. Did you know that Darius is the current leader of the Noxian military and one of the most feared generals in all of Runeterra?
 98. Did you know that Diana was once a child of the moon who was granted immense power by the Lunari?
 99. Did you know that Dr. Mundo is a madman who performs crude operations on himself in an attempt to become immune to pain?
-100. Did you know that Draven is a showman and gladiator who always puts on a good show for his fans?`
-const funFactsArray = funFactString.split('\n');
+100. Did you know that Draven is a showman and gladiator who always puts on a good show for his fans?`;
+const funFactsArray = funFactString.split("\n");
 // console.log(funFactsArray);
 
 const ff_db = new Database();
 
 for (let i = 0; i < funFactsArray.length; i++) {
   // console.log(i+1);
-  ff_db[`${i+1}`] = funFactsArray[i];
+  ff_db[`${i + 1}`] = funFactsArray[i];
+}
+
+for (let i = 0; i < ff_db.length; i++) {
+  console.log(ff_db[`${i + 1}`]);
 }
 
 // const randomNum = Math.floor(Math.random() * 100) + 1;
 // console.log(ff_db[randomNum]);
+
 
