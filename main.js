@@ -1,18 +1,17 @@
-// use the require thing for the funfactstring
-const funFactsString = require("./league-fun-fact.js"); // figure this out
+const getFunFact = require("./league-fun-fact.js");
 const Database = require("@replit/database");
 const { Client, Collection } = require("discord.js");
 const token = process.env["DISCORD_TOKEN"];
 
 // FOR TESTING PURPOSES ONLY
-console.log(funFactsString.quotes());
+// console.log(getFunFact());
 
 const client = new Client({ intents: ["Guilds"] });
 
 // LEAGUE FUN FACTS DB
 const ff_db = new Database();
 
-const funFactsArray = funFactString.split("\n");
+const funFactsArray = getFunFact().split("\n");
 // console.log(funFactsArray);
 
 for (let i = 0; i < funFactsArray.length; i++) {
