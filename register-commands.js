@@ -22,6 +22,10 @@ const commands = [
     description: "Deletes a match from the database",
   },
   {
+    name: "deleteall",
+    description: "Deletes all matches from the database",
+  },
+  {
     name: "showfirst",
     description: "Returns first match in database",
   },

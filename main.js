@@ -21,8 +21,6 @@ const ff_db = new Database();
 // MATCHES DB
 const matches_db = new Database();
 
-let numID = 0;
-
 // Db commands
 // async func setkey(db, key, value)
 async function setkey(db, key, value) {
@@ -52,6 +50,7 @@ async function deleteAll(db) {
       db.delete(key);
     })
   })
+    // db.empty();
 }
 
 // async func listkeys(db)
@@ -81,17 +80,54 @@ async function listkeys(db) {
   // return keys;
 }
 
+
+async function getkeyvalues(db) {
+  return db.getAll(); // this returns a promise, so use (async () => {}) when want data
+}
+
+// async function getLengthOfDB(db) {
+//   (async () => {
+//     const keyvalueobject = await getkeyvalues(db);
+//     console.log(`Length is ${Object.keys(keyvalueobject).length}`)
+//     // return Object.keys(keyvalueobject).length; // returns undefined
+//     return 69;
+//   })()
+// }
+
+let numID;
+let matches_string;
+
 async function getLengthOfDB(db) {
-  db.getAll().then(value => {
-    console.log("length: ", value.length);
-  })
+  try {
+    const keyvalueobject = await getkeyvalues(db);
+    console.log(`Length is ${Object.keys(keyvalueobject).length}`)
+    numID = Object.keys(keyvalueobject).length;
+  
+    console.log(`numID value inside getLengthOfDB: ${numID}`);
+    // return Object.keys(keyvalueobject).length;
+  } catch (error) {
+    console.error('Error: ', error);
+    throw error;
+  }
 }
 
 async function listkeyvalues(db) {
-  db.getAll().then(value => {
-    console.log("allkeyvalue: ", value);
-    console.log("Length of " + db + ": " + Object.keys(value).length);
-  });
+  try {
+    const keyvalueobject = await getkeyvalues(db);
+    console.log(`Length is ${Object.keys(keyvalueobject).length}`)
+    matches_string = keyvalueobject;
+    // console.log(matches_string);
+    // return matches_string;
+  } catch (error) {
+    console.error('Error: ', error);
+    throw error;
+  }
+  // (async () => {
+  //   const keyvalueobject = await getkeyvalues(db);
+  //   console.log("listkeyvaluesobject: ", keyvalueobject);
+  //   matches_string = keyvalueobject;
+  //   // return keyvalueobject;
+  // })()
 }
 
 
@@ -114,9 +150,29 @@ for (let i = 0; i < funFactsArray.length; i++) {
 //   console.log(ff_db[`${j + 1}`]);
 // }
 
+
+
 client.on("ready", () => {
   console.log(`Logged in as ${client.user.tag}!`);
 });
+
+console.log("On Startup!");
+// console.log(`typeof getLengthOfDb: ${typeof getLengthOfDB(matches_db)}`);
+
+// getLengthOfDB(matches_db).then(() => {
+//   console.log(`numID value outside getLengthOfDB: ${numID}`);
+//   console.log(numID); 
+// }).catch(error => {
+//   console.error('Error occurred: ', error);
+// });
+
+// (async () => {
+//   numID = await getLengthOfDB(matches_db);
+//   console.log(`numID value outside getLengthOfDB: ${numID}`);
+// })
+// getLengthOfDB(matches_db);
+// listkeyvalues(matches_db);
+
 
 client.on("interactionCreate", (interaction) => {
   if (!interaction.isChatInputCommand()) return;
@@ -154,17 +210,18 @@ client.on("interactionCreate", (interaction) => {
     winner = winner === 1 ? player1 : player2;
 
     // WHEN YOU FIND THE DB LENGTH, numID = {DB_LENGTH}
-
-    if (typeof numID === 'number') {
-      setkey(matches_db, numID, {"day": day, "time": time, "game": game, "player1": player1, "player2": player2, "winner": winner});
-    } else {
-      console.log(`numID is not a number: ${numID}`);
-    }
-
+    getLengthOfDB(matches_db).then(() => {
+      // console.log(`numID value outside getLengthOfDB: ${numID}`);
+      // console.log(numID); 
+      if (typeof numID === 'number') {
+        setkey(matches_db, numID, {"day": day, "time": time, "game": game, "player1": player1, "player2": player2, "winner": winner});
+      } else {
+        console.log(`numID is not a number: ${numID}`);
+      }
+    }).catch(error => {
+      console.error('Error occurred: ', error);
+    });
     
-
-    
-
     interaction.reply(
       `Day: ${day}\nTime: ${time}\nGame: ${game}\nFirst Player: ${player1}\nSecond Player: ${player2}\nWinner: ${winner}!`,
     );
@@ -172,33 +229,52 @@ client.on("interactionCreate", (interaction) => {
       `Key: ${numID}\nDay: ${day}\nTime: ${time}\nGame: ${game}\nFirst Player: ${player1}\nSecond Player: ${player2}\nWinner: ${winner}!\n------------------------------`,
     );
     
-    numID++;
-    // console.log("getkeyvalue: ", getkeyvalue(matches_db, "0"))
+  }
+  else if (interaction.commandName === 'deleteall') {
+    deleteAll(matches_db);
+    interaction.reply("All keys deleted!");
+    console.log("All keys deleted!");
+  }
+  else if (interaction.commandName === "matches") {
+    // Matches command  
     
-  } else if (interaction.commandName === "matches") {
-    // Matches command
-    
-    // if (matches_db.list().length === 0) {
-    //   console.log("matches_db.list().length === 0");
-    // } else {
-    //   console.log("matches_db.list().length !== 0");
-    //   console.log("matches_db.list(): ", Object.keys(matches_db.list()).length);
-    // }
-    
-    // console.log("typeof listkeys(matches_db): ", typeof listkeys(matches_db)); // listkeys(matches_db) is an object
-    // console.log("Object.values(listkeys(matches_db)))",     Object.values(listkeys(matches_db)));  
-    
+    // let matches_string;
 
-    // let matches_string = "Currently there are " + Object.keys(matches_db).length + " matches.\n";
-    let matches_string = "Hello World";
-    // console.log("listkeys(matches_db): ", listkeys(matches_db));
-    listkeyvalues(matches_db);
+    // getkeyvalues(matches_db).then((result) => {
+    //   console.log(result);
+    //   console.log(typeof result);
+    //   matches_string = Object.keys(result);
+    // })
+
+    console.log("In matches commands");
+    // getLengthOfDB(matches_db);
+    // listkeyvalues(matches_db);
     
     // console.log("allkeyvalue: ", allkeyvalue);
     
     // console.log("listkeys: ", listkeys(matches_db));
     // console.log(getkeyvalue(matches_db, "0"));
-    interaction.reply(`${matches_string}`);
+    listkeyvalues(matches_db).then(() => {
+      // console.log(`typeof keyvalueobject: ${typeof keyvalueobject}`);
+      let listOfMatches = "";
+      // console.log(`typeof matches_string: ${typeof matches_string}`);
+      // console.log(matches_string);
+      for (const elem in matches_string) {
+        // listOfMatches.push([elem, matches_string[elem]])
+        listOfMatches = listOfMatches + `-----------------------------\nMatch ${elem}: \nDay: ${matches_string[elem]['day']}\nTime: ${matches_string[elem]['time']}\nGame: ${matches_string[elem]['game']}\nFirst Player: ${matches_string[elem]['player1']}\nSecond Player: ${matches_string[elem]['player2']}\nWinner: ${matches_string[elem]['winner']}\n`;
+        // console.log(matches_string[elem]);
+        // console.log(`matches_string[elem]: ${Object.values(matches_string[elem])}`);
+        // interaction.reply(Object.values(matches_string[elem]));
+      }
+      console.log(listOfMatches);
+      // interaction.reply(`${Object.getOwnPropertyNames(matches_string)}`);
+      
+      // for (const match in listOfMatches) {
+      //   interaction.reply(`${match}: ${listOfMatches[match]}`);
+      // }
+      // interaction.reply("Hello World");
+      interaction.reply(listOfMatches);
+    })
   } 
 });
 
