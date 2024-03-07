@@ -18,7 +18,7 @@ const commands = [
     description: "Replies with all matches in database",
   },
   {
-    name: "delete", 
+    name: "delete",
     description: "Deletes a match from the database",
   },
   {
@@ -28,6 +28,18 @@ const commands = [
   {
     name: "showfirst",
     description: "Returns first match in database",
+  },
+  {
+    name: "recent",
+    description: "Returns most recent match in database",
+    options: [
+      {
+        name: "number",
+        description: "Num of matches user wants to bring up",
+        type: ApplicationCommandOptionType.String,
+        required: true,
+      },
+    ],
   },
   {
     name: "match",

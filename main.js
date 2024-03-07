@@ -140,19 +140,37 @@ client.on("interactionCreate", (interaction) => {
   if (interaction.commandName === "ping") {
     // Ping command
     interaction.reply("Pong!");
-  } else if (interaction.commandName === "ff") {
+  } 
+  else if (interaction.commandName === "ff") {
     // Fun fact command
     const randomNum = Math.floor(Math.random() * 100) + 1;
     interaction.reply(`${ff_db[randomNum]}`);
-  } else if (interaction.commandName === "delete") {
+  } 
+  else if (interaction.commandName === "delete") {
       // Delete command
       const key = interaction.options.getString("key");
       deletekey(matches_db, key);
       interaction.reply(`Key ${key} deleted!`);
-  } else if (interaction.commandName === "showfirst") {
-    console.log("showfirst: ", getkeyvalue(matches_db,"0"));
-    interaction.reply(getkeyvalue(matches_db, "0"));
   } 
+  else if (interaction.commandName === "showfirst") {
+    // Show First command
+    let showfirststring= "";
+    listkeyvalues(matches_db).then(() => {
+      console.log("showfirst: ", matches_string["0"]);
+      console.log(`values of first match: ${Object.values(matches_string[0])}`);
+      // showfirststring = showfirststring + Object.values(matches_string[0]);
+      showfirststring = showfirststring + 
+        `Day: ${matches_string[0]['day']}\nTime: ${matches_string[0]['time']}\nGame: ${matches_string[0]['game']}\nFirst Player: ${matches_string[0]['first-player']}\nSecond Player: ${matches_string[0]['second-player']}\nWinner: ***${matches_string[0]['winner']}***`;
+      interaction.reply(showfirststring);
+    })
+    
+  }
+  else if (interaction.commandName === "recent") {
+    // Recent command
+    let recentstring= interaction.options.getString("number");
+    console.log(`User input num: ${interaction.options.getString("number")}`);
+    interaction.reply(`User requested ${recentstring} match(es)`);
+  }
   else if (interaction.commandName === "match") {
     // Match command
     const date = new Date().toLocaleString("en-US", {
@@ -173,7 +191,7 @@ client.on("interactionCreate", (interaction) => {
     getLengthOfDB(matches_db).then(() => {
       
       if (typeof numID === 'number') {
-        setkey(matches_db, numID, {"day": day, "time": time, "game": game, "player1": player1, "player2": player2, "winner": winner});
+        setkey(matches_db, numID, {"day": day, "time": time, "game": game, "first-player": player1, "second-player": player2, "winner": winner});
       } else {
         console.log(`numID is not a number: ${numID}`);
       }
@@ -206,12 +224,15 @@ client.on("interactionCreate", (interaction) => {
       // console.log(matches_string);
       for (const elem in matches_string) {
         // listOfMatches.push([elem, matches_string[elem]])
-        listOfMatches = listOfMatches + `-----------------------------\nMatch ${elem}: \nDay: ${matches_string[elem]['day']}\nTime: ${matches_string[elem]['time']}\nGame: ${matches_string[elem]['game']}\nFirst Player: ${matches_string[elem]['player1']}\nSecond Player: ${matches_string[elem]['player2']}\nWinner: ${matches_string[elem]['winner']}\n`;
+        listOfMatches = listOfMatches + `-----------------------------\nMatch ${elem}: \nDay: ${matches_string[elem]['day']}\nTime: ${matches_string[elem]['time']}\nGame: ${matches_string[elem]['game']}\nFirst Player: ${matches_string[elem]['first-player']}\nSecond Player: ${matches_string[elem]['second-player']}\nWinner: ***${matches_string[elem]['winner']}***\n`;
         
       }
       console.log(listOfMatches);
-      
-      interaction.reply(listOfMatches);
+      if (listOfMatches === "") {
+        interaction.reply("There are no matches yet!");
+      } else {
+        interaction.reply(listOfMatches);
+      }
     })
   } 
 });
