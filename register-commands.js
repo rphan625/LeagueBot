@@ -42,6 +42,39 @@ const commands = [
     ],
   },
   {
+    name: "scoreboard",
+    description: "Returns scoreboard of all the players in the database",
+  },
+  {
+    name: "stats",
+    description: "Returns stats of the player",
+    options: [
+      {
+        name: "player",
+        description: "Player to get stats of",
+        type: ApplicationCommandOptionType.String,
+        choices: [
+          { name: "Blade", value: "Blade" },
+          { name: "Blub", value: "Blub" },
+          { name: "Timpany", value: "Timpany" },
+          { name: "Scope", value: "Scope" },
+          { name: "Slush", value: "Slush" },
+          { name: "Lily", value: "Lily" },
+          { name: "Gemini", value: "Gemini" },
+          { name: "Lyfe", value: "Lyfe" },
+          { name: "Lindsey", value: "Lindsey" },
+          { name: "Sqeezey", value: "Sqeezey" },
+          { name: "Timness", value: "Timness" },
+          { name: "ToKKy", value: "Tokky" },
+          { name: "Zero", value: "Zero" },
+          { name: "neoma", value: "neoma" },
+          { name: "Maii", value: "Maii" },
+        ],
+        required: true,
+      },
+    ],
+  },
+  {
     name: "match",
     description: "Add a 1v1 match to the database!",
     options: [
