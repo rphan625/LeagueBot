@@ -26,10 +26,6 @@ const commands = [
     description: "Deletes all matches from the database",
   },
   {
-    name: "showfirst",
-    description: "Returns first match in database",
-  },
-  {
     name: "recent",
     description: "Returns most recent match in database",
     options: [
@@ -44,6 +40,10 @@ const commands = [
   {
     name: "scoreboard",
     description: "Returns scoreboard of all the players in the database",
+  },
+  {
+    name: "leaderboard",
+    description: "Returns leaderboard of all the players in the database",
   },
   {
     name: "stats",

@@ -2,7 +2,7 @@ const getFunFact = require("./league-fun-fact.js");
 const Database = require("@replit/database");
 const { Client, Collection } = require("discord.js");
 const token = process.env["DISCORD_TOKEN"];
-const keepAlive = require("./server");
+// const keepAlive = require("./server");
 
 // FOR TESTING PURPOSES ONLY
 // console.log(getFunFact());
@@ -98,7 +98,7 @@ async function getLengthOfDB(db) {
 async function listkeyvalues(db) {
   try {
     const keyvalueobject = await getkeyvalues(db);
-    console.log(`Length is ${Object.keys(keyvalueobject).length}`);
+    // console.log(`Length is ${Object.keys(keyvalueobject).length}`);
     matches_string = keyvalueobject;
     // console.log(matches_string);
     // return matches_string;
@@ -109,10 +109,12 @@ async function listkeyvalues(db) {
 }
 
 // String Padding Function
-const pad = (str, length, char = ' ') => {
-  const new_string = str.padStart((str.length + length) / 2, char).padEnd(length, char);
+const pad = (str, length, char = " ") => {
+  const new_string = str
+    .padStart((str.length + length) / 2, char)
+    .padEnd(length, char);
   return new_string;
-}
+};
 
 //---------------------------------------------
 
@@ -140,7 +142,15 @@ client.on("ready", () => {
 console.log("On Startup!");
 
 // List of Players
-let players = ["Timpany", "Lily", "Blub", "Blade", "Sqeezey", "Gemini", "Timness", ]
+let players = [
+  "Timpany",
+  "Lily",
+  "Blub",
+  "Blade",
+  "Sqeezey",
+  "Gemini",
+  "Timness",
+];
 
 client.on("interactionCreate", (interaction) => {
   if (!interaction.isChatInputCommand()) return;
@@ -160,19 +170,6 @@ client.on("interactionCreate", (interaction) => {
     const key = interaction.options.getString("key");
     deletekey(matches_db, key);
     interaction.reply(`Key ${key} deleted!`);
-  } else if (interaction.commandName === "showfirst") {
-    // Show First command
-
-    let showfirststring = "";
-    listkeyvalues(matches_db).then(() => {
-      console.log("showfirst: ", matches_string["0"]);
-      console.log(`values of first match: ${Object.values(matches_string[0])}`);
-      // showfirststring = showfirststring + Object.values(matches_string[0]);
-      showfirststring =
-        showfirststring +
-        `Day: ${matches_string[0]["day"]}\nTime: ${matches_string[0]["time"]}\nGame: ${matches_string[0]["game"]}\nFirst Player: ${matches_string[0]["first-player"]}\nSecond Player: ${matches_string[0]["second-player"]}\nWinner: ***${matches_string[0]["winner"]}***`;
-      interaction.reply(showfirststring);
-    });
   } else if (interaction.commandName === "recent") {
     // Recent command
 
@@ -188,34 +185,44 @@ client.on("interactionCreate", (interaction) => {
 
         listkeyvalues(matches_db).then(() => {
           // console.log(`typeof keyvalueobject: ${typeof keyvalueobject}`);
-          let listOfMatches = "";
-          console.log(`typeof matches_string: ${typeof matches_string}`);
+          let listOfMatches = `
+Matches
++―――――――――+――――――――――――+―――――――――――――――――――+――――――――――――+――――――――――――+――――――――――――+
+|   Day   |    Time    |        Game       |  Player 1  |  Player 2  |   Winner   |
++―――――――――+――――――――――――+―――――――――――――――――――+――――――――――――+――――――――――――+――――――――――――+
+`;
+          // console.log(`typeof matches_string: ${typeof matches_string}`);
           let matches_reverse = Object.values(matches_string).reverse();
-          console.log(`matches_string reverse: ${matches_reverse}`);
+          // console.log(`matches_string reverse: ${matches_reverse}`);
           // console.log(matches_string);
           for (const elem in matches_reverse) {
             // listOfMatches.push([elem, matches_string[elem]])
-            console.log(matches_reverse[elem]);
+            // console.log(matches_reverse[elem]);
             listOfMatches =
               listOfMatches +
-              `-----------------------------\nMatch ${length - 1}: \nDay: ${
-                matches_reverse[elem]["day"]
-              }\nTime: ${matches_reverse[elem]["time"]}\nGame: ${
-                matches_reverse[elem]["game"]
-              }\nFirst Player: ${
-                matches_reverse[elem]["first-player"]
-              }\nSecond Player: ${
-                matches_reverse[elem]["second-player"]
-              }\nWinner: ***${matches_reverse[elem]["winner"]}***\n`;
+              `|${pad(String(matches_string[elem]["day"]), 9)}|${pad(
+                String(matches_string[elem]["time"]),
+                12,
+              )}|${pad(String(matches_string[elem]["game"]), 19)}|${pad(
+                String(matches_string[elem]["first_player"]),
+                12,
+              )}|${pad(
+                String(matches_string[elem]["second_player"]),
+                12,
+              )}|${pad(
+                String(matches_string[elem]["winner"]),
+                12,
+              )}|\n+―――――――――+――――――――――――+―――――――――――――――――――+――――――――――――+――――――――――――+――――――――――――+\n`;
             length--;
           }
-          console.log(listOfMatches);
+          // console.log(listOfMatches);
           if (listOfMatches === "") {
             interaction.reply("There are no matches yet!");
           } else {
+            listOfMatches = "```" + listOfMatches + "```";
             interaction.reply(
-              `User has requested max amount of matches: \n`,
-              listOfMatches,
+              "User has requested max amount of matches: \n" + 
+              listOfMatches
             );
           }
         });
@@ -225,21 +232,39 @@ client.on("interactionCreate", (interaction) => {
           `User input num: ${interaction.options.getString("number")}`,
         );
         listkeyvalues(matches_db).then(() => {
-          let listOfMatches = "";
+          let listOfMatches = `
+Matches
++―――――――――+――――――――――――+―――――――――――――――――――+――――――――――――+――――――――――――+――――――――――――+
+|   Day   |    Time    |        Game       |  Player 1  |  Player 2  |   Winner   |
++―――――――――+――――――――――――+―――――――――――――――――――+――――――――――――+――――――――――――+――――――――――――+
+`;
           console.log(`recentNum: ${recentNum}`);
           let countdown = recentNum;
-          console.log(`typeof matches_string: ${typeof matches_string}`);
+          // console.log(`typeof matches_string: ${typeof matches_string}`);
           for (let i = Object.keys(matches_string).length - 1; i >= 0; i--) {
             if (countdown !== 0) {
               console.log(matches_string[i]);
               listOfMatches =
                 listOfMatches +
-                `-----------------------------\nMatch ${i}: \nDay: ${matches_string[i]["day"]}\nTime: ${matches_string[i]["time"]}\nGame: ${matches_string[i]["game"]}\nFirst Player: ${matches_string[i]["first-player"]}\nSecond Player: ${matches_string[i]["second-player"]}\nWinner: ***${matches_string[i]["winner"]}***\n`;
+                `|${pad(String(matches_string[i]["day"]), 9)}|${pad(
+                  String(matches_string[i]["time"]),
+                  12,
+                )}|${pad(String(matches_string[i]["game"]), 19)}|${pad(
+                  String(matches_string[i]["first_player"]),
+                  12,
+                )}|${pad(
+                  String(matches_string[i]["second_player"]),
+                  12,
+                )}|${pad(
+                  String(matches_string[i]["winner"]),
+                  12,
+                )}|\n+―――――――――+――――――――――――+―――――――――――――――――――+――――――――――――+――――――――――――+――――――――――――+\n`;
               countdown--;
             } else {
               break;
             }
           }
+          listOfMatches = "```" + listOfMatches + "```";
           interaction.reply(
             `User requested ${recentNum} match(es)\n${listOfMatches}`,
           );
@@ -304,20 +329,34 @@ client.on("interactionCreate", (interaction) => {
 
     listkeyvalues(matches_db).then(() => {
       // console.log(`typeof keyvalueobject: ${typeof keyvalueobject}`);
-      let listOfMatches = "";
+      let listOfMatches = `
+Matches
++―――――――――+――――――――――――+―――――――――――――――――――+――――――――――――+――――――――――――+――――――――――――+
+|   Day   |    Time    |        Game       |  Player 1  |  Player 2  |   Winner   |
++―――――――――+――――――――――――+―――――――――――――――――――+――――――――――――+――――――――――――+――――――――――――+
+`;
       // console.log(`typeof matches_string: ${typeof matches_string}`);
       // console.log(matches_string);
       for (const elem in matches_string) {
         // listOfMatches.push([elem, matches_string[elem]])
         listOfMatches =
           listOfMatches +
-          `-----------------------------\nMatch ${elem}: \nDay: ${matches_string[elem]["day"]}\nTime: ${matches_string[elem]["time"]}\nGame: ${matches_string[elem]["game"]}\nFirst Player: ${matches_string[elem]["first_player"]}\nSecond Player: ${matches_string[elem]["second_player"]}\nWinner: ***${matches_string[elem]["winner"]}***\n`;
+          `|${pad(String(matches_string[elem]["day"]), 9)}|${pad(
+            String(matches_string[elem]["time"]),
+            12,
+          )}|${pad(String(matches_string[elem]["game"]), 19)}|${pad(
+            String(matches_string[elem]["first_player"]),
+            12,
+          )}|${pad(String(matches_string[elem]["second_player"]), 12)}|${pad(
+            String(matches_string[elem]["winner"]),
+            12,
+          )}|\n+―――――――――+――――――――――――+―――――――――――――――――――+――――――――――――+――――――――――――+――――――――――――+\n`;
       }
-      console.log(listOfMatches);
+      // console.log(listOfMatches);
       if (listOfMatches === "") {
         interaction.reply("There are no matches yet!");
       } else {
-        interaction.reply(listOfMatches);
+        interaction.reply("```" + listOfMatches + "```");
       }
     });
   } else if (interaction.commandName === "stats") {
@@ -325,7 +364,18 @@ client.on("interactionCreate", (interaction) => {
 
     console.log("Stats command");
     const player_name = interaction.options.getString("player");
-    let listOfMatches = "";
+    let stats_string = `
+Stats
++――――――――――――――――――――――――――+―――――――+――――――――――――+
+|          Player          | Win # |  Win Rate  |
++――――――――――――――――――――――――――+―――――――+――――――――――――+
+`;
+    let listOfMatches = `
+Matches
++―――――――――+――――――――――――+―――――――――――――――――――+――――――――――――+――――――――――――+――――――――――――+
+|   Day   |    Time    |        Game       |  Player 1  |  Player 2  |   Winner   |
++―――――――――+――――――――――――+―――――――――――――――――――+――――――――――――+――――――――――――+――――――――――――+
+`;
     listkeyvalues(matches_db).then(() => {
       console.log(`typeof matches_string: ${typeof matches_string}`);
       // console.log(`stats matches_string ${Object.values(Object.values(matches_string))}
@@ -341,7 +391,16 @@ client.on("interactionCreate", (interaction) => {
           // console.log(matches_string[elem]);
           listOfMatches =
             listOfMatches +
-            `-----------------------------\nMatch ${elem}: \nDay: ${matches_string[elem]["day"]}\nTime: ${matches_string[elem]["time"]}\nGame: ${matches_string[elem]["game"]}\nFirst Player: ${matches_string[elem]["first_player"]}\nSecond Player: ${matches_string[elem]["second_player"]}\nWinner: ***${matches_string[elem]["winner"]}***\n`;
+            `|${pad(String(matches_string[elem]["day"]), 9)}|${pad(
+              String(matches_string[elem]["time"]),
+              12,
+            )}|${pad(String(matches_string[elem]["game"]), 19)}|${pad(
+              String(matches_string[elem]["first_player"]),
+              12,
+            )}|${pad(String(matches_string[elem]["second_player"]), 12)}|${pad(
+              String(matches_string[elem]["winner"]),
+              12,
+            )}|\n+―――――――――+――――――――――――+―――――――――――――――――――+――――――――――――+――――――――――――+――――――――――――+\n`;
           if (matches_string[elem]["winner"] === player_name) {
             win_count++;
           }
@@ -350,22 +409,27 @@ client.on("interactionCreate", (interaction) => {
       if (match_count === 0) {
         interaction.reply(`${player_name} hasn't played any matches yet!`);
       } else {
-        interaction.reply(
-          `Stats Command\nPlayer: ${player_name}\nWins: ${win_count} / ${match_count} matches\nPercentage: ${(
-            win_count / match_count
-          ).toFixed(2)}%\n${listOfMatches}`,
-        );
+        stats_string =
+          stats_string +
+          `|${pad(String(player_name), 26)}|${pad(
+            String(win_count),
+            3,
+          )}/${pad(String(match_count), 3)}|${pad(
+            `${String((win_count / match_count).toFixed(2) * 100)}%`,
+            12,
+          )}|\n+――――――――――――――――――――――――――+―――――――+――――――――――――+\n${listOfMatches}`;
+        interaction.reply("```" + stats_string + "```");
       }
     });
   } else if (interaction.commandName === "scoreboard") {
     // Scoreboard Command
-    
+
     // interaction.reply("Scoreboard Command");
     listkeyvalues(matches_db).then(() => {
-      let scoreboard_string = 
-        `
+      let scoreboard_string = `
+Scoreboard
 +――――――――――――――――――――――――――+―――――――+――――――――――――+
-|          Player          | Wins  |  Win Rate  |
+|          Player          | Win # |  Win Rate  |
 +――――――――――――――――――――――――――+―――――――+――――――――――――+
 `;
       for (const player in players) {
@@ -373,21 +437,92 @@ client.on("interactionCreate", (interaction) => {
         let match_count = 0;
         let win_count = 0;
         for (const elem in matches_string) {
-          if ((matches_string[elem]["first_player"] === players[player]) || (matches_string[elem]["second_player"] === players[player])) {
+          if (
+            matches_string[elem]["first_player"] === players[player] ||
+            matches_string[elem]["second_player"] === players[player]
+          ) {
             match_count++;
             if (matches_string[elem]["winner"] === players[player]) {
               win_count++;
             }
           }
         }
-        console.log(`Player: ${players[player]}\nWins: ${win_count} / ${match_count} matches\nPercentage: ${(win_count / match_count).toFixed(2)}%\n`);
-        scoreboard_string = scoreboard_string + `|${pad(String(players[player]), 26)}|${pad(String(win_count), 3)}/${pad(String(match_count), 3)}|${pad(String(((win_count / match_count).toFixed(2)) * 100), 11)}%|\n+――――――――――――――――――――――――――+―――――――+――――――――――――+\n`
+        console.log(
+          `Player: ${
+            players[player]
+          }\nWins: ${win_count} / ${match_count} matches\nPercentage: ${(
+            win_count / match_count
+          ).toFixed(2)}%\n`,
+        );
+        scoreboard_string =
+          scoreboard_string +
+          `|${pad(String(players[player]), 26)}|${pad(
+            String(win_count),
+            3,
+          )}/${pad(String(match_count), 3)}|${pad(
+            `${String((win_count / match_count).toFixed(2) * 100)}%`,
+            12,
+          )}|\n+――――――――――――――――――――――――――+―――――――+――――――――――――+\n`;
       }
       interaction.reply("```" + scoreboard_string + "```");
-    })
+    });
+  } else if (interaction.commandName === "leaderboard") {
+    // Leaderboard Command
+
+    let leaderboard_array = [];
+    listkeyvalues(matches_db).then(() => {
+      let leaderboard_string = `
+Leaderboard
++―――――――――+――――――――――――――――――――――――――+―――――――+
+| Ranking |          Player          | Win # |
++―――――――――+――――――――――――――――――――――――――+―――――――+
+`;
+      for (const player in players) {
+        // calculate win count for each player
+        let win_count = 0;
+        for (const elem in matches_string) {
+          if (matches_string[elem]["winner"] === players[player]) {
+            win_count++;
+          }
+        }
+        leaderboard_array.push([win_count, players[player]]);
+      }
+      leaderboard_array.sort();
+      leaderboard_array.reverse();
+      let placement = 1;
+      for (const elem in leaderboard_array) {
+        // console.log(leaderboard_array[elem])
+        // console.log(`Index: ${elem}`);
+        if (elem === "0") {
+          console.log(`First Place ${leaderboard_array[elem][1]}`);
+        } else {
+          if (leaderboard_array[elem][0] === leaderboard_array[elem - 1][0]) {
+            console.log(
+              `Tied: ${leaderboard_array[elem - 1][1]} & ${
+                leaderboard_array[elem][1]
+              }`,
+            );
+          } else {
+            placement++;
+          }
+        }
+        leaderboard_string =
+          leaderboard_string +
+          `|${pad(String(placement), 9)}|${pad(
+            String(leaderboard_array[elem][1]),
+            26,
+          )}|${pad(
+            String(leaderboard_array[elem][0]),
+            7,
+          )}|\n+―――――――――+――――――――――――――――――――――――――+―――――――+\n`;
+      }
+      // console.log(leaderboard_array);
+      // console.log(`Length: ${leaderboard_array.length}`);
+      interaction.reply("```" + leaderboard_string + "```");
+    });
   }
 });
 
 client.login(token);
 
-keepAlive();
+// keepAlive();
