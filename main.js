@@ -172,6 +172,7 @@ client.on("interactionCreate", (interaction) => {
     interaction.reply(`Key ${key} deleted!`);
   } else if (interaction.commandName === "recent") {
     // Recent command
+    interaction.reply("Recent Matches!\nStill WIP!");
 
     let recentNum = interaction.options.getString("number");
     // let lengthDB;
@@ -185,6 +186,7 @@ client.on("interactionCreate", (interaction) => {
 
         listkeyvalues(matches_db).then(() => {
           // console.log(`typeof keyvalueobject: ${typeof keyvalueobject}`);
+          let listOfMatches_array = [];
           let listOfMatches = `
 Matches
 +―――――――――+――――――――――――+―――――――――――――――――――+――――――――――――+――――――――――――+――――――――――――+
@@ -198,7 +200,7 @@ Matches
           for (const elem in matches_reverse) {
             // listOfMatches.push([elem, matches_string[elem]])
             // console.log(matches_reverse[elem]);
-            listOfMatches =
+            listOfMatches = // FIX THE ERRORS
               listOfMatches +
               `|${pad(String(matches_string[elem]["day"]), 9)}|${pad(
                 String(matches_string[elem]["time"]),
@@ -214,16 +216,57 @@ Matches
                 12,
               )}|\n+―――――――――+――――――――――――+―――――――――――――――――――+――――――――――――+――――――――――――+――――――――――――+\n`;
             length--;
+            if (listOfMatches.length >= 2000) {
+              listOfMatches = listOfMatches.replace(
+                `|${pad(String(matches_string[elem]["day"]), 9)}|${pad(
+                  String(matches_string[elem]["time"]),
+                  12,
+                )}|${pad(String(matches_string[elem]["game"]), 19)}|${pad(
+                  String(matches_string[elem]["first_player"]),
+                  12,
+                )}|${pad(
+                  String(matches_string[elem]["second_player"]),
+                  12,
+                )}|${pad(
+                  String(matches_string[elem]["winner"]),
+                  12,
+                )}|\n+―――――――――+――――――――――――+―――――――――――――――――――+――――――――――――+――――――――――――+――――――――――――+\n`,
+                "",
+              );
+              listOfMatches_array.push(listOfMatches);
+              listOfMatches = "";
+              listOfMatches =
+                listOfMatches +
+                `|${pad(String(matches_string[elem]["day"]), 9)}|${pad(
+                  String(matches_string[elem]["time"]),
+                  12,
+                )}|${pad(String(matches_string[elem]["game"]), 19)}|${pad(
+                  String(matches_string[elem]["first_player"]),
+                  12,
+                )}|${pad(
+                  String(matches_string[elem]["second_player"]),
+                  12,
+                )}|${pad(
+                  String(matches_string[elem]["winner"]),
+                  12,
+                )}|\n+―――――――――+――――――――――――+―――――――――――――――――――+――――――――――――+――――――――――――+――――――――――――+\n`;
+            }
           }
           // console.log(listOfMatches);
           if (listOfMatches === "") {
             interaction.reply("There are no matches yet!");
           } else {
-            listOfMatches = "```" + listOfMatches + "```";
-            interaction.reply(
-              "User has requested max amount of matches: \n" + 
-              listOfMatches
-            );
+            // listOfMatches = "```" + listOfMatches + "```";
+            // interaction.reply(
+            //   "User has requested max amount of matches: \n" + listOfMatches,
+            // );
+
+            for (const elem in listOfMatches_array) {
+              client.channels.cache
+                .get("1212946385318584323")
+                .send("```" + String(listOfMatches_array[elem]) + "```");
+            }
+            // interaction.reply("User has requested max amount of matches:");
           }
         });
       } else {
@@ -232,6 +275,7 @@ Matches
           `User input num: ${interaction.options.getString("number")}`,
         );
         listkeyvalues(matches_db).then(() => {
+          let listOfMatches_array = [];
           let listOfMatches = `
 Matches
 +―――――――――+――――――――――――+―――――――――――――――――――+――――――――――――+――――――――――――+――――――――――――+
@@ -252,22 +296,60 @@ Matches
                 )}|${pad(String(matches_string[i]["game"]), 19)}|${pad(
                   String(matches_string[i]["first_player"]),
                   12,
-                )}|${pad(
-                  String(matches_string[i]["second_player"]),
-                  12,
-                )}|${pad(
+                )}|${pad(String(matches_string[i]["second_player"]), 12)}|${pad(
                   String(matches_string[i]["winner"]),
                   12,
                 )}|\n+―――――――――+――――――――――――+―――――――――――――――――――+――――――――――――+――――――――――――+――――――――――――+\n`;
               countdown--;
+              if (listOfMatches.length >= 2000) {
+                listOfMatches = listOfMatches.replace(
+                  `|${pad(String(matches_string[elem]["day"]), 9)}|${pad(
+                    String(matches_string[elem]["time"]),
+                    12,
+                  )}|${pad(String(matches_string[elem]["game"]), 19)}|${pad(
+                    String(matches_string[elem]["first_player"]),
+                    12,
+                  )}|${pad(
+                    String(matches_string[elem]["second_player"]),
+                    12,
+                  )}|${pad(
+                    String(matches_string[elem]["winner"]),
+                    12,
+                  )}|\n+―――――――――+――――――――――――+―――――――――――――――――――+――――――――――――+――――――――――――+――――――――――――+\n`,
+                  "",
+                );
+                listOfMatches_array.push(listOfMatches);
+                listOfMatches = "";
+                listOfMatches =
+                  listOfMatches +
+                  `|${pad(String(matches_string[i]["day"]), 9)}|${pad(
+                    String(matches_string[i]["time"]),
+                    12,
+                  )}|${pad(String(matches_string[i]["game"]), 19)}|${pad(
+                    String(matches_string[i]["first_player"]),
+                    12,
+                  )}|${pad(String(matches_string[i]["second_player"]), 12)}|${pad(
+                    String(matches_string[i]["winner"]),
+                    12,
+                  )}|\n+―――――――――+――――――――――――+―――――――――――――――――――+――――――――――――+――――――――――――+――――――――――――+\n`;
+              }
             } else {
               break;
             }
           }
-          listOfMatches = "```" + listOfMatches + "```";
-          interaction.reply(
-            `User requested ${recentNum} match(es)\n${listOfMatches}`,
-          );
+          // listOfMatches = "```" + listOfMatches + "```";
+          listOfMatches_array.push(listOfMatches);
+          // interaction.deferReply({ ephemeral: true })
+          // interaction.reply("howdy hey");
+          for (const elem in listOfMatches_array) {
+            client.channels.cache
+              .get("1212946385318584323")
+              .send("```" + String(listOfMatches_array[elem]) + "```");
+          }
+          // interaction.reply({
+          //   content: `User requested ${recentNum} match(es)`,
+          //   ephemeral: true,
+          // });
         });
       }
     });
@@ -311,12 +393,26 @@ Matches
       .catch((error) => {
         console.error("Error occurred: ", error);
       });
+    let match_string = `
++―――――――――+――――――――――――+―――――――――――――――――――+――――――――――――+――――――――――――+――――――――――――+
+|   Day   |    Time    |        Game       |  Player 1  |  Player 2  |   Winner   |
++―――――――――+――――――――――――+―――――――――――――――――――+――――――――――――+――――――――――――+――――――――――――+`;
+    match_string =
+      match_string +
+      `
+|${pad(String(day), 9)}|${pad(String(time), 12)}|${pad(String(game), 19)}|${pad(String(player1), 12)}|${pad(String(player2), 12)}|${pad(String(winner), 12)}|
++―――――――――+――――――――――――+―――――――――――――――――――+――――――――――――+――――――――――――+――――――――――――+`;
 
-    interaction.reply(
-      `Day: ${day}\nTime: ${time}\nGame: ${game}\nFirst Player: ${player1}\nSecond Player: ${player2}\nWinner: ${winner}!`,
-    );
+    // interaction.reply(
+    //   `Day: ${day}\nTime: ${time}\nGame: ${game}\nFirst Player: ${player1}\nSecond Player: ${player2}\nWinner: ${winner}!`,
+    // );
+    interaction.reply("```" + match_string + "```");
+
     console.log(
-      `Key: ${numID}\nDay: ${day}\nTime: ${time}\nGame: ${game}\nFirst Player: ${player1}\nSecond Player: ${player2}\nWinner: ${winner}!\n------------------------------`,
+      `
+      +―――――――――+――――――――――――+―――――――――――――――――――+――――――――――――+――――――――――――+――――――――――――+
+      |${pad(String(numID), 9)}|${pad(String(day), 12)}|${pad(String(time), 12)}|${pad(String(game), 12)}|${pad(String(player1), 12)}|${pad(String(player2), 12)}|${pad(String(winner), 12)}
+      +―――――――――+――――――――――――+―――――――――――――――――――+――――――――――――+――――――――――――+――――――――――――+`,
     );
   } else if (interaction.commandName === "deleteall") {
     deleteAll(matches_db);
@@ -337,6 +433,7 @@ Matches
 `;
       // console.log(`typeof matches_string: ${typeof matches_string}`);
       // console.log(matches_string);
+      let char_array = [];
       for (const elem in matches_string) {
         // listOfMatches.push([elem, matches_string[elem]])
         listOfMatches =
@@ -351,12 +448,55 @@ Matches
             String(matches_string[elem]["winner"]),
             12,
           )}|\n+―――――――――+――――――――――――+―――――――――――――――――――+――――――――――――+――――――――――――+――――――――――――+\n`;
+        if (listOfMatches.length >= 2000) {
+          listOfMatches = listOfMatches.replace(
+            `|${pad(String(matches_string[elem]["day"]), 9)}|${pad(
+              String(matches_string[elem]["time"]),
+              12,
+            )}|${pad(String(matches_string[elem]["game"]), 19)}|${pad(
+              String(matches_string[elem]["first_player"]),
+              12,
+            )}|${pad(String(matches_string[elem]["second_player"]), 12)}|${pad(
+              String(matches_string[elem]["winner"]),
+              12,
+            )}|\n+―――――――――+――――――――――――+―――――――――――――――――――+――――――――――――+――――――――――――+――――――――――――+\n`,
+            "",
+          );
+          // console.log(listOfMatches);
+          char_array.push(listOfMatches);
+          listOfMatches = "";
+          listOfMatches =
+            listOfMatches +
+            `|${pad(String(matches_string[elem]["day"]), 9)}|${pad(
+              String(matches_string[elem]["time"]),
+              12,
+            )}|${pad(String(matches_string[elem]["game"]), 19)}|${pad(
+              String(matches_string[elem]["first_player"]),
+              12,
+            )}|${pad(String(matches_string[elem]["second_player"]), 12)}|${pad(
+              String(matches_string[elem]["winner"]),
+              12,
+            )}|\n+―――――――――+――――――――――――+―――――――――――――――――――+――――――――――――+――――――――――――+――――――――――――+\n`;
+        }
       }
       // console.log(listOfMatches);
       if (listOfMatches === "") {
         interaction.reply("There are no matches yet!");
       } else {
-        interaction.reply("```" + listOfMatches + "```");
+        char_array.push(listOfMatches);
+        console.log(char_array);
+        for (const elem in char_array) {
+          // console.log(typeof char_array[elem]);
+          // console.log(`# of chars: ${String(char_array[elem]).length}`);
+          // interaction.reply("```" + String(char_array[elem]) + "```");
+          client.channels.cache
+            .get("1212946385318584323")
+            .send("```" + String(char_array[elem]) + "```");
+        }
+
+        // interaction.reply("```" + listOfMatches + "```");
+        // DEALT WITH THE 2000 CHAR LIMIT
+        // NEED TO FIGURE OUT HOW TO SEND SECOND REPLY TO THE INTERACTION
       }
     });
   } else if (interaction.commandName === "stats") {
@@ -381,6 +521,7 @@ Matches
       // console.log(`stats matches_string ${Object.values(Object.values(matches_string))}
       let match_count = 0;
       let win_count = 0;
+      let listOfMatches_array = [];
       for (const elem in matches_string) {
         // console.log(matches_string[elem]);
         if (
@@ -401,6 +542,35 @@ Matches
               String(matches_string[elem]["winner"]),
               12,
             )}|\n+―――――――――+――――――――――――+―――――――――――――――――――+――――――――――――+――――――――――――+――――――――――――+\n`;
+          if (listOfMatches.length >= 2000) {
+            listOfMatches = listOfMatches.replace(
+              `|${pad(String(matches_string[elem]["day"]), 9)}|${pad(
+                String(matches_string[elem]["time"]),
+                12,
+              )}|${pad(String(matches_string[elem]["game"]), 19)}|${pad(
+                String(matches_string[elem]["first_player"]),
+                12,
+              )}|${pad(String(matches_string[elem]["second_player"]), 12)}|${pad(
+                String(matches_string[elem]["winner"]),
+                12,
+              )}|\n+―――――――――+――――――――――――+―――――――――――――――――――+――――――――――――+――――――――――――+――――――――――――+\n`,
+              "",
+            );
+            listOfMatches_array.push(listOfMatches);
+            listOfMatches = "";
+            listOfMatches =
+              listOfMatches +
+              `|${pad(String(matches_string[elem]["day"]), 9)}|${pad(
+                String(matches_string[elem]["time"]),
+                12,
+              )}|${pad(String(matches_string[elem]["game"]), 19)}|${pad(
+                String(matches_string[elem]["first_player"]),
+                12,
+              )}|${pad(String(matches_string[elem]["second_player"]), 12)}|${pad(
+                String(matches_string[elem]["winner"]),
+                12,
+              )}|\n+―――――――――+――――――――――――+―――――――――――――――――――+――――――――――――+――――――――――――+――――――――――――+\n`;
+          }
           if (matches_string[elem]["winner"] === player_name) {
             win_count++;
           }
@@ -409,6 +579,7 @@ Matches
       if (match_count === 0) {
         interaction.reply(`${player_name} hasn't played any matches yet!`);
       } else {
+        // listOfMatches_array.push(listOfMatches);
         stats_string =
           stats_string +
           `|${pad(String(player_name), 26)}|${pad(
@@ -417,8 +588,15 @@ Matches
           )}/${pad(String(match_count), 3)}|${pad(
             `${String((win_count / match_count).toFixed(2) * 100)}%`,
             12,
-          )}|\n+――――――――――――――――――――――――――+―――――――+――――――――――――+\n${listOfMatches}`;
+          )}|\n+――――――――――――――――――――――――――+―――――――+――――――――――――+\n`;
         interaction.reply("```" + stats_string + "```");
+        // console.log(listOfMatches_array);
+        listOfMatches_array.push(listOfMatches);
+        for (const elem in listOfMatches_array) {
+          client.channels.cache
+            .get("1212946385318584323")
+            .send("```" + String(listOfMatches_array[elem]) + "```");
+        }
       }
     });
   } else if (interaction.commandName === "scoreboard") {

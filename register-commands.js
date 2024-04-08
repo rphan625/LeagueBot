@@ -86,6 +86,7 @@ const commands = [
           { name: "League of Legends", value: "League of Legends" },
           { name: "Roblox", value: "Roblox" },
           { name: "Overwatch", value: "Overwatch" },
+          { name: "Valorant", value: "Valorant" },
         ],
         required: true,
       },
